@@ -206,9 +206,37 @@ async function getHistoricalCountryData_v2(data, country) {
   });
 }
 
+async function getHistoricalProvinceData_v2(data, province) {
+  console.log("province0", province);
+  const provinceData = data.filter(obj => obj.province == province.toLowerCase());
+  console.log("provinceData", provinceData);
+
+  const timeline = {cases: {}, deaths: {}};
+
+  if(typeof provinceData !== 'undefined' && provinceData.length > 0) {
+    // loop cases, deaths for the province
+    Object.keys(provinceData[0].timeline).forEach(specifier => {
+      Object.keys(provinceData[0].timeline[specifier]).forEach(date => {
+        if (timeline[specifier][date]) {
+          timeline[specifier][date] += parseInt(provinceData[0].timeline[specifier][date]);
+        }
+        else {
+          timeline[specifier][date] = parseInt(provinceData[0].timeline[specifier][date]);
+        }
+      });
+    });
+  }
+
+  return ({
+    province: province,
+    timeline
+  });
+}
+
 module.exports = {
   historical,
   historical_v2,
   getHistoricalCountryData,
-  getHistoricalCountryData_v2
+  getHistoricalCountryData_v2,
+  getHistoricalProvinceData_v2
 };
