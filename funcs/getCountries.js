@@ -22,7 +22,7 @@ var getcountries = async (keys, redis) => {
         .children("tr")
         .children("td");
     // NOTE: this will change when table format change in website
-    const totalColumns = 10;
+    const totalColumns = 11;
     const countryColIndex = 0;
     const casesColIndex = 1;
     const todayCasesColIndex = 2;
@@ -123,13 +123,17 @@ var getcountries = async (keys, redis) => {
         // get total cases per one million population
         if (i % totalColumns === casesPerOneMillionColIndex) {
             let casesPerOneMillion = cell.children.length != 0 ? cell.children[0].data : "";
-            result[result.length - 1].casesPerOneMillion = parseFloat(casesPerOneMillion);
+            result[result.length - 1].casesPerOneMillion = parseFloat(
+                casesPerOneMillion.trim().replace(/,/g, "") || "0"
+            );
         }
 
         // get total deaths per one million population
         if (i % totalColumns === deathsPerOneMillionColIndex) {
             let deathsPerOneMillion = cell.children.length != 0 ? cell.children[0].data : "";
-            result[result.length - 1].deathsPerOneMillion = parseFloat(deathsPerOneMillion);
+            result[result.length - 1].deathsPerOneMillion = parseFloat(
+                deathsPerOneMillion.trim().replace(/,/g, "") || "0"
+            );
         }
     }
 
